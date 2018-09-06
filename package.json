@@ -1,0 +1,8 @@
+{
+  "name": "streaming-demo",
+  "version": "1.0.0",
+  "description": "streaming demo",
+  "main": "index.js",
+  "author": "Robby",
+  "license": "MIT"
+}

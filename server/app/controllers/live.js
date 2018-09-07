@@ -1,10 +1,6 @@
 const _ = require('lodash');
 
-/**
- * @method: POST
- * @endpoint /api/on-live-auth
- * @description authentication for live streaming user
- */
+// 开始推流
 exports.onLiveAuth = async ctx => {
   const streamInfo = ctx.request.body;
   const streamSecretKey = _.get(streamInfo, 'name');
@@ -16,10 +12,9 @@ exports.onLiveAuth = async ctx => {
   ctx.body = {
     verified: true
   };
-  
 };
 
-
+// 结束推流
 exports.onLiveDone = async ctx => {
   const streamingKey = _.get(ctx.request.body, 'name');
   console.log(`User "${streamingKey}"" finished streaming.`);
@@ -27,5 +22,29 @@ exports.onLiveDone = async ctx => {
   // http response will not effect our streaming server.
   ctx.body = {
     done: true
+  };
+};
+
+// web client通过server控制raspberry pi
+exports.command = app => async ctx => {
+  // start or stop pushing stream to raspberry according to the action from user.
+  const streamCommand = _.get(ctx.request.body, 'stream', false);
+
+  const connections = app.connections.getClient();
+
+  // loop through each pi socket client and seng the command to them.
+  connections.map(con => {
+    const ws = con.ws;
+    if (ws) {
+      const message = {
+        action: 'stream',
+        payload: streamCommand
+      };
+      ws.send(JSON.stringify(message));
+    }
+  });
+
+  ctx.body = {
+    received: true
   };
 };

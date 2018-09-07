@@ -24,7 +24,7 @@ app.use(bodyParser());
 
 
 // routes
-const router = require('./router/index')();
+const router = require('./router/index')(app);
 
 app
   .use(router.routes())

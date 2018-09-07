@@ -36,9 +36,10 @@ class Player extends Component {
   componentDidMount() {
     const video = this.player;
 
+    const liveChannel = 'robbyvan';
+    const streamUrl = `http://localhost:3003/live/${liveChannel}/index.m3u8`;
+    
     if(Hls.isSupported()) {
-      const streamUrl = 'https://video-dev.github.io/streams/x36xhzz/x36xhzzAA.m3u8';
-
       video.addEventListener('contextmenu', e => {
         e.preventDefault();
         return false;
@@ -57,7 +58,7 @@ class Player extends Component {
    // Note: it would be more normal to wait on the 'canplay' event below however on Safari (where you are most likely to find built-in HLS support) the video.src URL must be on the user-driven
    // white-list before a 'canplay' event will be emitted; the last video event that can be reliably listened-for when the URL is not on the white-list is 'loadedmetadata'.
     else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = 'https://video-dev.github.io/streams/x36xhzz/x36xhzz.m3u8';
+      video.src = streamUrl;
       video.addEventListener('loadedmetadata',function() {
         video.play();
       });

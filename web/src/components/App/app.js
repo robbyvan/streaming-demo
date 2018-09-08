@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import {borderColor, headerHeight, containerMaxWidth} from "./theme";
-import userAvatar from '../image/avatar.jpeg';
-import Watch from './pages/watch';
-import Home from './pages/home';
+import {borderColor, headerHeight, containerMaxWidth} from "../../css/theme";
+import userAvatar from '../../image/avatar.jpeg';
+import Watch from '../Watch/watch';
+import Home from '../Home/home';
+import Register from '../Register/register';
+import Login from '../Login/login';
 import { Route, Switch } from 'react-router-dom'
 
 const Container = styled.div `
@@ -44,7 +46,9 @@ const HeaderTitle = styled.div `
 `;
 
 const HeaderUserMenu = styled.div `
-  width: 50px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
   display: flex;
   align-items: center;
 `;
@@ -74,6 +78,8 @@ class App extends Component {
           <Switch>
             <Route exact path={'/watch/:id'} component={Watch} />
             <Route exact path={'/'} component={Home} />
+            <Route exact path={'/register'} component={Register}></Route>
+            <Route exact path={'/login'} component={Login}></Route>
           </Switch>
         </Main>
 

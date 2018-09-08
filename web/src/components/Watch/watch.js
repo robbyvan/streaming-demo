@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled  from 'styled-components';
-import Player from '../player';
+import Player from '../Player/player';
 
 const LiveWrapper = styled.div``;
 

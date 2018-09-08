@@ -26,6 +26,12 @@ const Koa = require('koa');
 // create koa app
 const app = new Koa();
 
+// allow CORS
+const cors = require('koa2-cors');
+app.use(cors({
+  origin: 'http://localhost:3000',
+}));
+
 app.server = http.createServer(app.callback());
 
 // set up websocket server.

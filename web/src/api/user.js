@@ -6,3 +6,9 @@ export function signup(data, options = {}) {
 
   return axios.post(url, data, options);
 }
+
+export function login(user, options = {}) {
+  const url = `${base}/api/users/login`;
+
+  return axios.post(url, user, options);
+}

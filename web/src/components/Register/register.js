@@ -59,10 +59,6 @@ class Register extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
-  componentDidMound() {
-    console.log(this.props.actions);
-  }
-
   handleSubmit(e) {
     e.preventDefault();
     if (!this.state.canSubmit) {
@@ -72,12 +68,11 @@ class Register extends Component {
     this.setState({ canSubmit: false });
     signup(user)
       .then(res => {
-        console.log(res.data);
         if (res.data.success) {
           this.setState({
             message: {
               type: 'success',
-              msg: ['Sign up success.']
+              msg: ['Hooray! You have created a new account.']
             },
             canSubmit: true,
           });
@@ -85,7 +80,7 @@ class Register extends Component {
           this.setState({
             message: {
               type: 'error',
-              msg: res.data.msg.split(',')
+              msg: res.data.msg.split(';')
             },
             canSubmit: true,
           });

@@ -30,10 +30,16 @@ module.exports = function(app) {
   router.post('/camera/:id/stream', Live.command(app));
 
   /*** @method: POST
-  * @endpoint: /api/users
+  * @endpoint: /api/users/signup
   * @description: Create new user.
   */
   router.post('/users/signup', App.hasBody, User.signup);
+
+  /*** @method: POST
+  * @endpoint: /api/users/login
+  * @description: Create new user.
+  */
+  router.post('/users/login', App.hasBody, User.login);
 
   return router;
 };

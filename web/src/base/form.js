@@ -2,14 +2,14 @@ import styled from "styled-components";
 import {
   dangerColor,
   primaryColor
-} from "../css/theme";
+} from "../common/css/theme";
 
-export const FormSuccessMessage = styled.p `
+export const FormSuccessMessage = styled.p`
   border: 1px solid ${primaryColor};
   padding: 8px;
 `;
 
-export const FormErrorMessage = styled.p `
+export const FormErrorMessage = styled.p`
   border: 1px solid ${dangerColor};
   padding: 8px;    
 `;
@@ -38,7 +38,8 @@ export const FormInput = styled.input `
 `;
 
 export const FormAction = styled.div `
-  display: flex;
+  width: 100%;
+  text-align: center;
 `;
 
 export const FormSubmit = styled.button `
@@ -46,19 +47,21 @@ export const FormSubmit = styled.button `
   padding: 5px 15px;
   background: #FFF;
   font-weight: 600;
+  width: 80%;
   margin: 0 auto;
   &:hover {
     cursor: pointer;
   }
 `;
 
-export const FormButton = styled.button `
-  border: 1px transparent;
+export const FormButton = styled.button`
+  margin-top: 20px;
+  border: 1px solid rgba(0, 0, 0.06);
   padding: 5px 15px;
   background: #FFF;
   font-weight: 600;
-`;
-
-export const FormActionLeft = styled.div `
-  flex-grow: 1;
+  width: 80%;
+  &:hover {
+    cursor: pointer;
+  }
 `;

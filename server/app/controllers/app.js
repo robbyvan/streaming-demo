@@ -1,4 +1,6 @@
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
+const User = mongoose.model('User');
 
 exports.hasBody = async (ctx, next) => {
   const body = ctx.request.body || {};
@@ -6,7 +8,7 @@ exports.hasBody = async (ctx, next) => {
   if (Object.keys(body).length === 0) {
     ctx.body = {
       success: false,
-      err: '是不是漏掉什么了'
+      msg: '是不是漏掉什么了'
     };
     return;
   }
@@ -26,31 +28,43 @@ exports.hasToken = async (ctx, next) => {
   if (!token) {
     ctx.body = {
       success: false,
-      msg: `eyyy, seems you lost the key.`
+      msg: `eyyy, seems you lost the key.`,
+      code: -1,
     };
     return;
   }
 
   try {
     const decoded = await jwt.verify(token, 'donottellothers');
-    console.log('decoded token', decoded);
     if (!decoded) {
       ctx.body = {
         success: false,
-        err: 'Whoops, your login session has expired'
+        msg: 'Whoops, your login session has expired',
+        code: -1,
       }
       return;
     }
+
     // token通过
     const email = decoded.email;
-    ctx.userEmail = email;
+    const user = await User.findOne({ email }).exec();
+    if (!user) {
+      ctx.body = {
+        success: false,
+        msg: 'Hello there, but who are you?'
+      };
+      return;
+    }
+
+    ctx.user = user;
     return next();
   } catch(e) {
     ctx.body = {
       success: false,
-      err: 'Whoops, wrong token'
+      msg: 'Whoops, seems your session has expired',
+      code: -1
     }
-    console.log('catch', e);
+    console.log('error: ', e.message);
     return;
   }
 };

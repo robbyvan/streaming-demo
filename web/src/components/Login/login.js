@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import {
   FormSuccessMessage,
@@ -10,9 +13,10 @@ import {
   FormLabel,
   FormSubmit,
   FormButton,
-  FormActionLeft
 } from '../../base/form';
 import { login } from '../../api/user';
+import * as LoginActions from './action';
+import { history } from "../../history";
 
 const LoginWrapper = styled.div`
   position: relative;
@@ -21,6 +25,18 @@ const LoginWrapper = styled.div`
 const LoginHeader = styled.h2`
   text-align: center;
 `;
+
+function mapStateToProps(store) {
+  return {
+    user: store.app.user
+  };
+}
+
+function matchDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(LoginActions, dispatch)
+  };
+}
 
 class Login extends Component {
   constructor(props) {
@@ -42,8 +58,14 @@ class Login extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  // componentWillMount() {
+  //   const currentUser = this.props.user;
+  //   if (currentUser) {
+  //     history.push('/');
+  //   }
+  // }
+
   handleSubmit(e) {
-    const that = this;
     e.preventDefault();
     if (!this.state.canSubmit) {
       return;
@@ -60,6 +82,9 @@ class Login extends Component {
             },
             canSubmit: true,
           });
+          this.props.actions.saveUserToken(res.data.token);
+          this.props.actions.setUser(res.data.user);
+          history.push('/');
         } else {
           this.setState({
             message: {
@@ -97,7 +122,7 @@ class Login extends Component {
     const { user, message } = this.state;
     return (
       <LoginWrapper>
-        <LoginHeader>Login works</LoginHeader>
+        <LoginHeader>Hello there</LoginHeader>
 
         <Form onSubmit={this.handleSubmit}>
           <FormItem>
@@ -124,6 +149,9 @@ class Login extends Component {
 
           <FormAction>
             <FormSubmit type="submit">SIGN IN</FormSubmit>
+            <FormButton type="button">
+              Do not have an account yet?
+            </FormButton>
           </FormAction>
           {
             message.msg.length > 0
@@ -138,4 +166,9 @@ class Login extends Component {
   }
 }
 
-export default Login;
+Login.propTypes = {
+  user: PropTypes.object,
+  actions: PropTypes.object.isRequired
+};
+
+export default connect(mapStateToProps, matchDispatchToProps)(Login);

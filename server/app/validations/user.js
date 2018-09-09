@@ -36,7 +36,7 @@ function validateRegisterFormat(user) {
     }
   });
   if (errors.length > 0) {
-    const errMsg = _.join(errors, ',');
+    const errMsg = _.join(errors, ';');
     return { valid: false, msg: errMsg };
   }
   return { valid: true, msg: 'valid.' };

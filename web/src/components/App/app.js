@@ -1,12 +1,22 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
-import {borderColor, headerHeight, containerMaxWidth} from "../../css/theme";
-import userAvatar from '../../image/avatar.jpeg';
+import { Route, Switch, withRouter } from 'react-router-dom';
+import _ from 'lodash';
+import { borderColor, headerHeight, containerMaxWidth } from "../../common/css/theme";
+import defaultAvatar from '../../common/image/default.png';
+import userAvatar from '../../common/image/avatar.png';
 import Watch from '../Watch/watch';
 import Home from '../Home/home';
 import Register from '../Register/register';
 import Login from '../Login/login';
-import { Route, Switch } from 'react-router-dom'
+import CameraList from '../CameraList/cameralist';
+import AddCamera from '../AddCamera/addcamera';
+import * as AppActions from './actions';
+import { history } from "../../history";
+import { loadUserInfo } from '../../api/user';
 
 const Container = styled.div `
   max-width: ${containerMaxWidth}px;
@@ -57,18 +67,77 @@ const HeaderUserAvatar = styled.img `
   border-radius: 50%;
   width: 30px;
   height: 30px;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
+const UserTitle = styled.div`
+  position: absolute;
+  right: 50px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: ${headerHeight}px;
+`;
+
+function mapStateToProps(store) {
+  return {
+    user: store.app.user,
+    token: store.app.token,
+  };
+}
+
+function matchDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(AppActions, dispatch)
+  };
+}
+
 class App extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.handleAvatarClick = this.handleAvatarClick.bind(this);
+  }
+
+  componentWillMount() {
+    const token = this.props.token;
+    loadUserInfo(token)
+      .then(res => {
+        if (res.data.success) {
+          this.props.actions.setUser(res.data.user);
+        } else {
+          this.props.actions.signout();
+        }
+      })
+      .catch(err => {
+        this.props.actions.signout();
+      });
+  }
+
+  handleAvatarClick(e) {
+    let user = this.props.user;
+    if (user !== null) {
+      this.props.actions.signout();
+      return;
+    }
+    history.push('/login');
+  }
+
   render() {
+    const currentUser = this.props.user;
+    const avatarSrc = currentUser ? userAvatar : defaultAvatar;
+
     return (
       <div className="app">
         <Header>
           <Container>
             <HeaderWrapper>
               <HeaderTitle>Camera</HeaderTitle>
-              <HeaderUserMenu>
-                <HeaderUserAvatar alt="" src={userAvatar} />
+              { currentUser && <UserTitle>What's up, {_.get(currentUser, 'name', '')}</UserTitle> }
+              <HeaderUserMenu onClick={this.handleAvatarClick}>
+                <HeaderUserAvatar alt="avatar" src={avatarSrc} />
               </HeaderUserMenu>
             </HeaderWrapper>
           </Container>
@@ -76,16 +145,18 @@ class App extends Component {
 
         <Main>
           <Switch>
-            <Route exact path={'/watch/:id'} component={Watch} />
             <Route exact path={'/'} component={Home} />
             <Route exact path={'/register'} component={Register}></Route>
             <Route exact path={'/login'} component={Login}></Route>
+            <Route exact path={'/watch/:id'} component={Watch} />
+            <Route exact path={'/cameralist'} component={CameraList}></Route>
+            <Route exact path={'/cameralist/add'} component={AddCamera}></Route>
           </Switch>
         </Main>
 
         <Footer className="footer">
           <Container>
-            <Copyright>@ 2018 Robby</Copyright>
+            <Copyright>2018 @Robby</Copyright>
           </Container>
         </Footer>
       </div>
@@ -93,4 +164,9 @@ class App extends Component {
   }
 }
 
-export default App;
+App.propTypes = {
+  user: PropTypes.object,
+  actions: PropTypes.object.isRequired
+};
+
+export default withRouter(connect(mapStateToProps, matchDispatchToProps)(App));

@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import * as RegisterActions from './actions';
 import {
   FormSuccessMessage,
   FormErrorMessage,
@@ -13,10 +11,10 @@ import {
   FormInput,
   FormLabel,
   FormSubmit,
-  FormButton,
-  FormActionLeft
+  FormButton
 } from '../../base/form';
 import { signup } from '../../api/user';
+import { history } from "../../history";
 
 const RegisterWrapper = styled.div`
   position: relative;
@@ -29,12 +27,6 @@ const RegisterHeader = styled.h2`
 function mapStateToProps(store) {
   return {
     user: store.app.user
-  };
-}
-
-function matchDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(RegisterActions, dispatch)
   };
 }
 
@@ -58,6 +50,13 @@ class Register extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
   }
+
+  // componentWillMount() {
+  //   const currentUser = this.props.user;
+  //   if (currentUser) {
+  //     history.push('/');
+  //   }
+  // }
 
   handleSubmit(e) {
     e.preventDefault();
@@ -113,7 +112,7 @@ class Register extends Component {
 
     return (
       <RegisterWrapper>
-        <RegisterHeader>Create your account</RegisterHeader>
+        <RegisterHeader>Create A New Account</RegisterHeader>
 
         <Form onSubmit={this.handleSubmit}>
           <FormItem>
@@ -150,7 +149,10 @@ class Register extends Component {
           </FormItem>
 
           <FormAction>
-            <FormSubmit type="submit">Create A New Account</FormSubmit>
+            <FormSubmit type="submit">SIGN UP</FormSubmit>
+            <FormButton onClick={e => history.push('/login')} type="button">
+              Already have an account?
+            </FormButton>
           </FormAction>
           {
             message.msg.length > 0
@@ -166,8 +168,7 @@ class Register extends Component {
 }
 
 Register.propTypes = {
-  user: PropTypes.object.isRequired,
-  actions: PropTypes.object.isRequired,
+  user: PropTypes.object
 };
 
-export default connect(mapStateToProps, matchDispatchToProps)(Register);
+export default connect(mapStateToProps)(Register);

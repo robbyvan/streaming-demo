@@ -1,9 +1,9 @@
-const xss = require('xss');
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
 const _ = require('lodash');
-const User = mongoose.model('User');
+const xss = require('xss');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
+const User = mongoose.model('User');
 
 const { validateRegisterFormat, validateLoginFormat } = require('../validations/user');
 
@@ -112,22 +112,12 @@ exports.login = async (ctx, next) => {
 
 // get user info
 exports.me = async (ctx, next) => {
-  const userEmail = ctx.userEmail;
-  console.log('userEmail', userEmail);
-  try {
-    const user = await User.findOne({ email: userEmail }).exec();
-    const u = { ...user._doc };
-    _.unset(u, 'password');
-    ctx.body = {
-      success: true,
-      user: u,
-    };
-    return next();
-  } catch(e) {
-    ctx.body = {
-      success: false,
-      msg: 'Whoops, can not get user information now.'
-    };
-    return;
-  }
+  const user = ctx.user;
+  const u = { ...user._doc };
+  _.unset(u, 'password');
+  ctx.body = {
+    success: true,
+    user: u,
+  };
+  return next();
 }

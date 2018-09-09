@@ -12,3 +12,13 @@ export function login(user, options = {}) {
 
   return axios.post(url, user, options);
 }
+
+export function loadUserInfo(token) {
+  const url = `${base}/api/users/me`;
+
+  const options = {
+    rbtoken: token
+  }
+  
+  return axios.get(url, { params: options });
+}

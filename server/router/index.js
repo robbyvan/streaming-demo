@@ -2,6 +2,7 @@ const Router = require('koa-router');
 const App = require('../app/controllers/app');
 const Live = require('../app/controllers/live');
 const User = require('../app/controllers/user');
+const Camera = require('../app/controllers/camera');
 
 module.exports = function(app) {
   const router = new Router({
@@ -29,20 +30,40 @@ module.exports = function(app) {
   */
   router.post('/camera/:id/stream', Live.command(app));
 
-  /*** @method: POST
+  /** 
+  * @method: POST
   * @endpoint: /api/users/signup
   * @description: Create new user.
   */
   router.post('/users/signup', App.hasBody, User.signup);
 
-  /*** @method: POST
-  * @endpoint: /api/users/login
+  /** 
+  * @method: POST
+  * @endpoint: /api/users/signup
   * @description: Create new user.
   */
   router.post('/users/login', App.hasBody, User.login);
 
-  // test token
-  router.post('/users/me', App.hasBody, App.hasToken, User.me);
+  /** 
+  * @method: GET
+  * @endpoint: /api/users/me
+  * @description: Get User Info By Token.
+  */
+  router.get('/users/me', App.hasToken, User.me);
+
+  /** 
+  * @method: POST
+  * @endpoint: /api/cameras
+  * @description: Create new camera under certain userId.
+  */
+  router.post('/cameras', App.hasBody, App.hasToken, Camera.create);
+
+  /** 
+  * @method: GET
+  * @endpoint: /api/cameras/:id
+  * @description: Get camera list.
+  */
+  router.get('/cameras', App.hasToken, Camera.getMyCameralist);
 
   return router;
 };

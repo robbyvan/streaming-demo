@@ -3,7 +3,8 @@ import { loadToken } from '../../common/js/storage';
 
 const initialState = {
   user: null,
-  token: loadToken()
+  token: loadToken(),
+  isAuthenticated: false,
 };
 
 const appReducer = (state = initialState, action) => {
@@ -12,8 +13,10 @@ const appReducer = (state = initialState, action) => {
       return { ...state, token: action.payload };
     case at.SET_USER:
       return { ...state, user: action.payload };
+    case at.SET_AUTHENTICATED:
+      return { ...state, isAuthenticated: action.payload };
     case at.SIGN_OUT:
-      return { ...state, user: null, token: null };
+      return { ...state, user: null, token: null, isAuthenticated: false };
     default:
       return state;
   }

@@ -15,3 +15,10 @@ export function setUser(user) {
     payload: user
   };
 }
+
+export function setAuthenticated(status) {
+  return {
+    type: at.SET_AUTHENTICATED,
+    payload: status
+  };
+}

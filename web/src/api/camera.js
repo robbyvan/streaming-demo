@@ -14,3 +14,16 @@ export function addCamera(cam) {
 
   return axios.post(url, cam, options);
 }
+
+export function getMyCameraList() {
+  const url = `${base}/api/me/cameras`;
+
+  const token = loadToken();
+  const options = {
+    params: {
+      rbtoken: token
+    }
+  };
+
+  return axios.get(url, options);
+}

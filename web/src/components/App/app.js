@@ -16,7 +16,6 @@ import CameraList from '../CameraList/cameralist';
 import AddCamera from '../AddCamera/addcamera';
 import * as AppActions from './actions';
 import { history } from "../../history";
-import { loadUserInfo } from '../../api/user';
 
 const Container = styled.div `
   max-width: ${containerMaxWidth}px;
@@ -103,17 +102,7 @@ class App extends Component {
 
   componentWillMount() {
     const token = this.props.token;
-    loadUserInfo(token)
-      .then(res => {
-        if (res.data.success) {
-          this.props.actions.setUser(res.data.user);
-        } else {
-          this.props.actions.signout();
-        }
-      })
-      .catch(err => {
-        this.props.actions.signout();
-      });
+    this.props.actions.asyncUserStatus(token);
   }
 
   handleAvatarClick(e) {

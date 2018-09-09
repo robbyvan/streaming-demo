@@ -63,7 +63,7 @@ module.exports = function(app) {
   * @endpoint: /api/cameras/:id
   * @description: Get camera list.
   */
-  router.get('/cameras', App.hasToken, Camera.getMyCameralist);
+  router.get('/me/cameras', App.hasToken, Camera.getMyCameralist);
 
   return router;
 };

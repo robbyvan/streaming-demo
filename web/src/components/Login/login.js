@@ -16,6 +16,7 @@ import {
 } from '../../base/form';
 import { login } from '../../api/user';
 import * as LoginActions from './action';
+import { asyncUserStatus } from '../App/actions';
 import { history } from "../../history";
 
 const LoginWrapper = styled.div`
@@ -28,13 +29,13 @@ const LoginHeader = styled.h2`
 
 function mapStateToProps(store) {
   return {
-    user: store.app.user
+    ...store.app
   };
 }
 
 function matchDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(LoginActions, dispatch)
+    actions: bindActionCreators({ ...LoginActions, asyncUserStatus }, dispatch)
   };
 }
 
@@ -52,18 +53,20 @@ class Login extends Component {
         type: 'success',
         msg: []
       },
+      redirectToReferrer: false
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  // componentWillMount() {
-  //   const currentUser = this.props.user;
-  //   if (currentUser) {
-  //     history.push('/');
-  //   }
-  // }
+  async componentWillMount() {
+    const token = this.props.token;
+    await this.props.actions.asyncUserStatus(token);
+    if (this.props.isAuthenticated) {
+      history.push('/');
+    }
+  }
 
   handleSubmit(e) {
     e.preventDefault();
@@ -84,6 +87,7 @@ class Login extends Component {
           });
           this.props.actions.saveUserToken(res.data.token);
           this.props.actions.setUser(res.data.user);
+          this.props.actions.setAuthenticated(true);
           history.push('/');
         } else {
           this.setState({

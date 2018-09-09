@@ -55,6 +55,13 @@ class AddCamera extends Component {
     this.toggleCheckBox = this.toggleCheckBox.bind(this);
   }
 
+  componentWillMount() {
+    const user = this.props.user;
+    if (!user) {
+      history.push('/login');
+    }
+  }
+
   handleSubmit(e) {
     e.preventDefault();
     const { camera } = this.state;

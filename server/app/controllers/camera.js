@@ -34,8 +34,6 @@ exports.create = async (ctx, next) => {
     userId: ctx.user._id
   });
 
-  console.log(obj);
-
   try {
     obj = await obj.save();
   } catch(e) {

@@ -41,5 +41,8 @@ module.exports = function(app) {
   */
   router.post('/users/login', App.hasBody, User.login);
 
+  // test token
+  router.post('/users/me', App.hasBody, App.hasToken, User.me);
+
   return router;
 };

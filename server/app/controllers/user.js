@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const _ = require('lodash');
 const User = mongoose.model('User');
+const jwt = require('jsonwebtoken');
 
 const { validateRegisterFormat, validateLoginFormat } = require('../validations/user');
 
@@ -96,10 +97,37 @@ exports.login = async (ctx, next) => {
     return;
   }
 
+  let u = {...user._doc};
+  _.unset(u, 'password');
+  // 生成jwt
+  const token = jwt.sign({ email: u.email }, 'donottellothers', { expiresIn: '1h' });
   ctx.body = {
     success: true,
     msg: 'login success.',
-    user: user
+    user: u,
+    token: token
   };
   return next();
 };
+
+// get user info
+exports.me = async (ctx, next) => {
+  const userEmail = ctx.userEmail;
+  console.log('userEmail', userEmail);
+  try {
+    const user = await User.findOne({ email: userEmail }).exec();
+    const u = { ...user._doc };
+    _.unset(u, 'password');
+    ctx.body = {
+      success: true,
+      user: u,
+    };
+    return next();
+  } catch(e) {
+    ctx.body = {
+      success: false,
+      msg: 'Whoops, can not get user information now.'
+    };
+    return;
+  }
+}

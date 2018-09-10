@@ -1,0 +1,40 @@
+.list-header {
+  text-align: center;
+}
+
+ul {
+  list-style: none;
+}
+
+.table-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.table-row li {
+  flex: 1;
+  text-align: center;
+  height: 40px;
+  line-height: 40px;
+  font-size: 1.2em;
+}
+
+.add-button {
+ width: 200px;
+ height: 40px;
+ background: none;
+ background-color: transparent;
+ border: 1px solid #000;
+ display: block;
+ margin: 0 auto;
+ color: #000;
+ font-weight: 600;
+ font-size: 0.8em;
+}
+
+.add-button:hover {
+  cursor: pointer;
+  background-color: #000;
+  color: #fff;
+}

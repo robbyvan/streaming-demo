@@ -109,6 +109,7 @@ class App extends Component {
     let user = this.props.user;
     if (user !== null) {
       this.props.actions.signout();
+      history.push('/');
       return;
     }
     history.push('/login');
@@ -116,6 +117,7 @@ class App extends Component {
 
   render() {
     const currentUser = this.props.user;
+    const isAuthenticated = this.props.isAuthenticated;
     const avatarSrc = currentUser ? userAvatar : defaultAvatar;
 
     return (

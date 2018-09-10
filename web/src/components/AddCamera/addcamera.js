@@ -86,6 +86,7 @@ class AddCamera extends Component {
               msg: ['A new camera has been added to camera list']
             }
           });
+          setTimeout(() => history.push("/cameralist"), 1000);
         } else {
           this.setState({
             message: {

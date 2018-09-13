@@ -1,0 +1,8 @@
+.hi {
+  background-color: pink;
+  .say {
+    color: red;
+    background-color: coral;
+  }
+}
+

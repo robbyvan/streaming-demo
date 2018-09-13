@@ -1,11 +1,11 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
-import createReducer from './reducers';
+import createReducer from './_reducers';
 
 const middlewares = [thunk];
 
 const configureStore = (initialState = Object.assign({})) => {
-  // for dev.
+  // redux devtool
   const composeEnhancers =
     typeof window === 'object' &&
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?   
